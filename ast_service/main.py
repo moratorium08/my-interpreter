@@ -87,22 +87,22 @@ def split_add_sub(tokens):
     return split_par(tokens)
 
 def gen_ast(tokens):
-    return split_add_sub(tokens)
+    return split_add_sub(tokens).to_list()
 
-print(gen_ast([1, '+', 2, '-', 3]).to_list())
-print(gen_ast(['(', 1, '+', 2, ')',  '-', 3]).to_list())
-print(gen_ast([1, '*', '(', 2, '+', 3, ')']).to_list())
+print(gen_ast([1, '+', 2, '-', 3]))
+print(gen_ast(['(', 1, '+', 2, ')',  '-', 3]))
+print(gen_ast([1, '*', '(', 2, '+', 3, ')']))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
         return open('index.html').read()
-    qstr = request.json['query']
+    q = request.json['query']
     try:
-        ret = lexer(qstr)
+        ret = gen_ast(q)
     except:
-        return jsonify({'status': 'fail', 'error': 'lexer error'})
+        return jsonify({'status': 'fail', 'error': 'ast error'})
 
     return jsonify({'status': 'ok', 'result': ret})
 
-#app.run(host='0.0.0.0')
+app.run(host='0.0.0.0')
