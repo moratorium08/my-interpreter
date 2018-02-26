@@ -23,7 +23,6 @@ class BinTree:
 
 
 def split_par(tokens):
-    print(tokens)
     if len(tokens) == 0:
         raise Exception('invalid syntax')
     elif len(tokens) == 1:
@@ -53,17 +52,15 @@ def split_par(tokens):
                 raise Exception('invalid syntax')
             elif cnt == 0:
                 if i == len(tokens) - 1:
-                    return split_par(tokens[1:i])
+                    return split_add_sub(tokens[1:i])
                 if i == len(tokens) - 2:
                     raise Exception('invalid syntax')
                 token = tokens[i + 1]
-                left = split_par(tokens[1:i])
+                left = split_add_sub(tokens[1:i])
                 right = split_par(tokens[i + 2:])
                 return BinTree(token, left, right)
         elif type(token) == int:
             continue
-        else:
-            raise Exception('invalid syntax')
 
     raise Exception('not supported')
 
@@ -75,20 +72,26 @@ def split_add_sub(tokens):
             raise Exception('invalid syntax')
         return Leaf(token)
 
+    par_cnt = 0
     for i, token in enumerate(tokens):
-        if token in ['+', '-']:
+        if par_cnt == 0 and token in ['+', '-']:
             if i == len(tokens) - 1 or i == 0:
                 raise Exception('invalid syntax')
             left = split_par(tokens[:i])
             right = split_add_sub(tokens[i + 1:])
             return BinTree(token, left, right)
+        elif token == '(':
+            par_cnt += 1
+        elif token == ')':
+            par_cnt -= 1
     return split_par(tokens)
 
 def gen_ast(tokens):
     return split_add_sub(tokens)
 
 print(gen_ast([1, '+', 2, '-', 3]).to_list())
-print(gen_ast(['(', 1, '+', 2,' )',  '-', 3]).to_list())
+print(gen_ast(['(', 1, '+', 2, ')',  '-', 3]).to_list())
+print(gen_ast([1, '*', '(', 2, '+', 3, ')']).to_list())
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
