@@ -7,7 +7,9 @@ import rpc
 app = Flask(__name__)
 
 def run_inner(ast):
-    if len(ast) == 1:
+    if type(ast) == int:
+        return ast
+    elif len(ast) == 1:
         ret = ast[0]
         if type(ret) != int:
             raise Exception('type error')
