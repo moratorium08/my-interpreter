@@ -1,0 +1,37 @@
+add_service:
+    build: add_service
+
+sub_service:
+    build: sub_service
+
+mul_service:
+    build: mul_service
+
+div_service:
+    build: div_service
+
+lexer_service:
+    build: lexer_service
+
+ast_service:
+    build: ast_service
+
+main_service:
+    build: main_service
+    ports:
+        - "5000:5000"
+    environment:
+        ADD_SERVICE: http://add_service:5000/
+        SUB_SERVICE: http://sub_service:5000/
+        MUL_SERVICE: http://mul_service:5000/
+        DIV_SERVICE: http://div_service:5000/
+        LEXER_SERVICE: http://lexer_service:5000/
+        AST_SERVICE: http://ast_service:5000/
+    links:
+        - add_service
+        - sub_service
+        - mul_service
+        - div_service
+        - lexer_service
+        - ast_service
+
